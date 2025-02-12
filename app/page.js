@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import Card from "@/components/Card/card";
 
 
 export default function Home() {
   return (
-      <div className="p-10">
-        <button className="btn btn-primary">Test Button</button>
-          <Link href="/pages/about/page.js">
-              <button className={"btn btn-primary"}>About</button>
-          </Link>
+      <>
+      <h1>Homepage</h1>
+      <div className="grid grid-cols-3 gap-4">
+        <Card />
+        <Card />
+        <Card />
+        <Card />
       </div>
+      </>
   );
 }

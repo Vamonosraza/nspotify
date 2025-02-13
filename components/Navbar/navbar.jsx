@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, {useState} from 'react'
+import { ClerkProvider, SignedIn, SignInButton, SignedOut, UserButton} from "@clerk/nextjs";
 
 function navbar() {
 
@@ -41,6 +42,14 @@ return (
             </div>
             </Link>
             <div className="navbar-end">
+                <SignedOut>
+                <SignInButton >
+                    <button className="btn btn-ghost">Sign in</button>
+                </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                <UserButton />
+                </SignedIn>
                 
                 <button className="btn btn-ghost btn-circle">
                 <svg

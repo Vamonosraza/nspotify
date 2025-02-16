@@ -2,6 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
 import adminRoutes from './routes/admin.route.js';
+import authRoutes from './routes/auth.route.js';
+import songRoutes from './routes/songs.route.js';
+import albumsRoutes from './routes/albums.route.js';
+import statisticsRoutes from './routes/statistics.route.js';
 
 dotenv.config();
 

@@ -5,3 +5,5 @@ const router = Router();
 router.get('/', (req, res) => {
     res.send('auth route with GET method');
 });
+
+export default router;

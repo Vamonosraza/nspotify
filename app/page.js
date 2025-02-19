@@ -2,8 +2,8 @@
 import Card from "@/components/Card/card";
 import { useState, useEffect} from "react";
 
-const clientId = process.env.SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
 
 console.log('clientId:', clientId);
 console.log('clientSecret:', clientSecret);

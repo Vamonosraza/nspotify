@@ -5,6 +5,9 @@ import { useState, useEffect} from "react";
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
+console.log('clientId:', clientId);
+console.log('clientSecret:', clientSecret);
+
 
 export default function Home() {
     const [searchInput, setSearchInput] = useState('');
@@ -12,6 +15,11 @@ export default function Home() {
     const [albums, setAlbums] = useState([]);
 
     useEffect(() => {
+        if (!clientId || !clientSecret) {
+            console.error('Client ID or Client Secret is missing');
+            return;
+        }
+
         const authParams = {
             method: 'POST',
             headers:{
@@ -22,11 +30,21 @@ export default function Home() {
         fetch('https://accounts.spotify.com/api/token', authParams)
             .then(response => response.json())
             .then(data => {
-                setAccessToken(data.access_token)
-            });
+                 if (data.access_token) {
+                    setAccessToken(data.access_token);
+                } else {
+                    console.error('Failed to fetch access token:', data);
+                }
+            })
+            .catch(error => console.error('Failed to fetch access token:', error));
     }, []);
 
     async function search(){
+        if (!accessToken) {
+            console.error('No access token available');
+            return;
+        }
+
         const artistParams = {
             method:'GET',
             headers:{
@@ -34,18 +52,28 @@ export default function Home() {
                 'Authorization': `Bearer ${accessToken}`
             }
         }
-        const artistID = await fetch(`https://api.spotify.com/v1/search?q=${searchInput}&type=artist`, artistParams)
-            .then(result => result.json())
-            .then(data => {
-              return data.artists.items[0].id;
-            });
+        try {
+            const artistID = await fetch(`https://api.spotify.com/v1/search?q=${searchInput}&type=artist`, artistParams)
+                .then(result => result.json())
+                .then(data => {
+                    if (data.artists && data.artists.items.length > 0) {
+                        return data.artists.items[0].id;
+                    } else {
+                        console.error('No artist found:', data);
+                        return null;
+                    }
+                });
 
-          // Get Artist Albums
-        await fetch(`https://api.spotify.com/v1/artists/${artistID}/albums?include_groups=album&market=US&limit=50`, artistParams)
-            .then(result => result.json())
-            .then(data => {
-              setAlbums(data.items);
-            });
+            if (!artistID) return;
+
+            await fetch(`https://api.spotify.com/v1/artists/${artistID}/albums?include_groups=album&market=US&limit=50`, artistParams)
+                .then(result => result.json())
+                .then(data => {
+                    setAlbums(data.items);
+                });
+        } catch (error) {
+            console.error('Error fetching artist or albums:', error);
+        }
     }
 
 
@@ -58,14 +86,14 @@ export default function Home() {
                   type="text"
                   placeholder="Search For Artist"
                   className="input input-bordered w-full max-w-xs"
-                  onKeyDown={event => {
+                  onKeyDown={async event => {
                       if (event.key === "Enter") {
-                          search();
+                         await search();
                       }
                   }}
                   onChange={event => setSearchInput(event.target.value)}
               />
-              <button className="btn btn-primary ml-2" onClick={search}>
+              <button className="btn btn-primary ml-2" onClick={async () => await search() }>
                   Search
               </button>
           </div>

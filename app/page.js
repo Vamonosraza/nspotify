@@ -102,12 +102,12 @@ export default function Home() {
                   <Card key={album.id} album={album}/>
               ))}
           </div>
-          <div className="grid grid-cols-3 gap-4">
-              <Card/>
-              <Card/>
-              <Card/>
-              <Card/>
-          </div>
+          {/*<div className="grid grid-cols-3 gap-4">*/}
+          {/*    <Card/>*/}
+          {/*    <Card/>*/}
+          {/*    <Card/>*/}
+          {/*    <Card/>*/}
+          {/*</div>*/}
       </>
   );
 }

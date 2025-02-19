@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+Create a `.env` file in the root directory of your project and add the following variables with your own values:
+
+```dotenv
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
+NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+```
+Users will need to create your own Spotify API credentials.
+https://developer.spotify.com/documentation/web-api
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

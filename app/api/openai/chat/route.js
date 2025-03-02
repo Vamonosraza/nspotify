@@ -17,7 +17,8 @@ export const POST = async (req) => {
 
         const reply = response.choices[0].message;
 
-        console.log(reply);
+        // console.log(reply);
+        // console.log(reply.content)
         return NextResponse.json({ reply });
     } catch (error) {
         console.error('OpenAI API Error:', error);

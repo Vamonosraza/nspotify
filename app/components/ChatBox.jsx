@@ -13,13 +13,14 @@ export default function ChatBox() {
         localStorage.setItem('chatID', chatID);
 
         setTimeout(() => {
-            chatBoxRef.currentc.classList.add('enter');
+            chatBoxRef.current.classList.add('enter');
         }, 1000);
     },[]);
 
     const toggleChat = () => setIsOpen(!isOpen);
 
-    const sendMessage =async () => {
+    const sendMessage =async (e) => {
+        e.preventDefault()
         if(!input.trim()) return;
 
         const userMessage = { role:'user', content: input};
@@ -34,7 +35,7 @@ export default function ChatBox() {
         })
 
         const data = await response.json();
-        const botMessage = { role:'bot', content:data.reply}
+        const botMessage = { role:'bot', content:data.reply.content}
 
         setMessages([...messages, userMessage, botMessage]);
         setInput('');
@@ -62,22 +63,21 @@ export default function ChatBox() {
                 <div className="p-4">
                     <div ref={messagesRef} className="h-80 overflow-y-auto mb-4">
                         {messages.map((msg, index) => (
-                            <div key={index} className={`p-2 chat ${msg.sender === 'user' ? 'chat-end' : 'chat-start'}`}>
+                            <div key={index} className={`p-2 chat ${msg.role === 'user' ? 'chat-end' : 'chat-start'}`}>
                                 <div className={`chat-bubble`}>
-                                {msg.text}
+                                {msg.content}
                             </div>
                             </div>
                         ))}
                     </div>
-                    <form className="flex">
+                    <form className="flex" onSubmit={sendMessage}>
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                             className="input input-bordered flex-1 p-2 rounded-l-lg focus:outline-none"
                         />
-                        <button type="submit" className="btn bg-purple-500 p-2 rounded-r-lg text-white" onClick={sendMessage}>
+                        <button type="submit" className="btn bg-purple-500 p-2 rounded-r-lg text-white">
                             Send
                         </button>
                     </form>

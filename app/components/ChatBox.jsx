@@ -19,13 +19,25 @@ export default function ChatBox() {
 
     const toggleChat = () => setIsOpen(!isOpen);
 
-    const sendMessage = (e) => {
-        e.preventDefault();
-        if(input.trim()){
-            setMessages([...messages, { text: input, sender: 'user' }]);
-            setInput('');
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-        }
+    const sendMessage =async () => {
+        if(!input.trim()) return;
+
+        const userMessage = { role:'user', content: input};
+        setMessages([...messages, userMessage]);
+
+        const response = await fetch('/api/openai/chat',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({message:input})
+        })
+
+        const data = await response.json();
+        const botMessage = { role:'bot', content:data.reply}
+
+        setMessages([...messages, userMessage, botMessage]);
+        setInput('');
     }
 
     const createUUID = () =>{
@@ -57,14 +69,15 @@ export default function ChatBox() {
                             </div>
                         ))}
                     </div>
-                    <form onSubmit={sendMessage} className="flex">
+                    <form className="flex">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                             className="input input-bordered flex-1 p-2 rounded-l-lg focus:outline-none"
                         />
-                        <button type="submit" className="btn bg-purple-500 p-2 rounded-r-lg text-white">
+                        <button type="submit" className="btn bg-purple-500 p-2 rounded-r-lg text-white" onClick={sendMessage}>
                             Send
                         </button>
                     </form>

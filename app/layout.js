@@ -17,6 +17,7 @@ export default function RootLayout({ children }) {
                 <Navbar />
                 <main className="p-4 max-w-6xl mx-auto ">{children}</main>
                   <ChatBox />
+                  <SpotifyPlayer />
                 </AuthProvider>
             </body>
         </html>

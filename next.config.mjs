@@ -1,7 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['i.scdn.co'], // Allow Spotify image domain
+       remotePatterns: [
+          {
+            protocol: "https",
+            hostname: "i.scdn.co",
+            pathname: "**",
+          },
+          {
+            protocol: "https",
+            hostname: "mosaic.scdn.co",
+            pathname: "**",
+          },
+          {
+            protocol: "https",
+            hostname: "image-cdn-fa.spotifycdn.com",
+            pathname: "**",
+          },
+          {
+            protocol: "https",
+            hostname: "*.spotifycdn.com",
+            pathname: "**",
+          },
+        ],
       },
 };
 

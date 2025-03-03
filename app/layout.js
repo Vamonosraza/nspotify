@@ -1,8 +1,8 @@
-// app/layout.js
 import './globals.css';
 import Navbar from './components/navbar';
 import { AuthProvider } from './context/authContext';
 import ChatBox from "@/app/components/ChatBox";
+import SpotifyPlayer from './components/player';
 
 export const metadata = {
     title: 'Music Explorer',

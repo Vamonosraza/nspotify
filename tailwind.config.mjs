@@ -10,9 +10,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'spotify-green': '#1DB954',
       },
     },
   },
+  darkMode: 'class',
   plugins: [
       require('daisyui'),
   ],

@@ -15,9 +15,17 @@ export default function CallbackPage() {
                 .then(data => {
                     if (data.success) {
                         console.log(data);
-                        localStorage.setItem('access_token', data.access_token)
-                        localStorage.setItem('refresh_token', data.refresh_token)
-                        // Handle successful login
+                        // Store the access token and refresh token
+                        localStorage.setItem('access_token', data.access_token);
+                        localStorage.setItem('refresh_token', data.refresh_token);
+
+                        // Calculate and set the token expiry time in localStorage.
+                        // data.expires_in is assumed to be in seconds.
+                        const expiresIn = data.expires_in; // e.g., 3600 seconds
+                        const expiryTime = new Date().getTime() + (expiresIn - 60) * 1000; // subtracting a 60-second buffer
+                        localStorage.setItem('token_expiry', expiryTime);
+
+                        // Redirect after successful login
                         router.push('/'); // or wherever you want to redirect
                     } else {
                         console.error('Login failed:', data.error);

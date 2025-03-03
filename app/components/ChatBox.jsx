@@ -13,19 +13,32 @@ export default function ChatBox() {
         localStorage.setItem('chatID', chatID);
 
         setTimeout(() => {
-            chatBoxRef.currentc.classList.add('enter');
+            chatBoxRef.current.classList.add('enter');
         }, 1000);
     },[]);
 
     const toggleChat = () => setIsOpen(!isOpen);
 
-    const sendMessage = (e) => {
-        e.preventDefault();
-        if(input.trim()){
-            setMessages([...messages, { text: input, sender: 'user' }]);
-            setInput('');
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-        }
+    const sendMessage =async (e) => {
+        e.preventDefault()
+        if(!input.trim()) return;
+
+        const userMessage = { role:'user', content: input};
+        setMessages([...messages, userMessage]);
+
+        const response = await fetch('/api/openai/chat',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({message:input})
+        })
+
+        const data = await response.json();
+        const botMessage = { role:'bot', content:data.reply.content}
+
+        setMessages([...messages, userMessage, botMessage]);
+        setInput('');
     }
 
     const createUUID = () =>{
@@ -50,14 +63,14 @@ export default function ChatBox() {
                 <div className="p-4">
                     <div ref={messagesRef} className="h-80 overflow-y-auto mb-4">
                         {messages.map((msg, index) => (
-                            <div key={index} className={`p-2 chat ${msg.sender === 'user' ? 'chat-end' : 'chat-start'}`}>
+                            <div key={index} className={`p-2 chat ${msg.role === 'user' ? 'chat-end' : 'chat-start'}`}>
                                 <div className={`chat-bubble`}>
-                                {msg.text}
+                                {msg.content}
                             </div>
                             </div>
                         ))}
                     </div>
-                    <form onSubmit={sendMessage} className="flex">
+                    <form className="flex" onSubmit={sendMessage}>
                         <input
                             type="text"
                             value={input}
